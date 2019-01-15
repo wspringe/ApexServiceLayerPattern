@@ -22,7 +22,8 @@ The concerns can be simply separated into three basic questions:
 
 The trigger only worries about **when** as in **when** to act on an event. The following trigger serves as a catch-all template for all events that Apex has and calls the appropriate handler function for that specific event:
 
-`
+```apex
+
 trigger SampleTrigger on SObjectName (before insert, after insert, before update, after update, before delete, after delete, after undelete) {
     SampleTriggerHandler handler = new SampleTriggerHandler();
     if (Trigger.isInsert) {
@@ -58,13 +59,15 @@ trigger SampleTrigger on SObjectName (before insert, after insert, before update
         }
     }
 }
-`
+
+```
 
 ### Handler
 
 The handler worries about **what/which** and it is simple to identify what logic is being run based on specific trigger events:
 
-`
+```apex
+
 public with sharing class SampleTriggerHandler implements TriggerHandlerInterface{
 
     public void beforeInsert(List<SObject> newList) {
@@ -89,13 +92,15 @@ public with sharing class SampleTriggerHandler implements TriggerHandlerInterfac
 
     }
 }
-`
+
+```
 
 ### Optional: TriggerHandler interface
 
 Moreover, it implements a TriggerHandler interface so that each SObject trigger handler class has the same signatures for their functions, and can contain different implementation of said functions. *If you do not want to implement the trigger handler this way, you can specify the List and map types as your desired SObject and leave out the* `implement TriggerHandler` *part of the TriggerHandler class.* The interface class is:
 
-`
+```apex
+
 public interface TriggerHandler {
     void beforeInsert(List<SObject> newList);
     void afterInsert(List<SObject> newList, Map<Id, SObject> newMap);
@@ -105,7 +110,8 @@ public interface TriggerHandler {
     void afterDelete(List<SObject> oldList, map<Id, SObject> oldMap);
     void afterUndelete(List<SObject> newList, map<Id,SObject> newMap);
 }
-`
+
+```
 
 **Note** that because of the parameterized method signatures containing lists and maps of type *SObject*, the fuction classes will have to cast the SObject type to your desired SObject type such as SObject to Account (if there is a better way to do this, please let me know).
 
@@ -113,7 +119,8 @@ public interface TriggerHandler {
 
 The Service answers the **how** questions: 
 
-`
+```apex
+
 public with sharing class SObjectFunctions {
 
     public static void functionName(List<SObject> newList) {
@@ -126,7 +133,8 @@ public with sharing class SObjectFunctions {
         // additional functions/logic here
     }
 }
-`
+
+```
 
 Again, this helps with readability and for Apex class testing logic because you can call these functions as you wish. **Note** that the functions inside the class must be static in order to not have to instantiate the SObjectFunctions class.
 
